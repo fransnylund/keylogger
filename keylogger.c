@@ -39,13 +39,23 @@ int main(void) {
 				for (bit = 0; bit < 8; bit++) {
 
 					// If the individual bit is "on" in the new_keys and "off" in the old_keys, then we know it has been pressed
-					if ( (new_keys[byte] & bitCheck) && !(old_keys[byte] & bitCheck) ) {
-						printf("Pressed\n");
+					if ( (new_keys[byte] & bitCheck)  ) {
+						
+						// The keycode is the position that we found the bit that's "on"
+						keyCode = byte * 8 + bit;
+						
+						// XKeycodeToKeysym() translates the keyCode to the ASCII equivalent	
+						keySym = XKeycodeToKeysym(display, keyCode, 0);
+						
+						// XKeysymToString() translates the ASCII keySym to a string(like a, b, x, or whatever)
+						printf("Key pressed: [%s]\n", key = XKeysymToString(keySym));
+						
 					}
 					bitCheck = bitCheck << 1;
 				}
 			}
 		}
+		// Basically old_keys = new_keys
 		memcpy(old_keys, new_keys, 32);
 
 
