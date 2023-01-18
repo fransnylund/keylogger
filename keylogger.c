@@ -1,14 +1,29 @@
 #include <stdio.h>
 #include <X11/Xlib.h>
+#include <time.h>
 #include <string.h>
 
 // write_to_file() opens a file and appends the keys passed to it to the file
 void write_to_file(char *text) {
 
-	FILE *file = fopen("hello", "a+");
+	time_t t;
+	struct tm *timeinfo;
+	char buffer[32];
+	
+	// return time since 1970 I guess?
+	t = time(NULL);
+	
+	timeinfo = localtime(&t);
 
+	FILE *file = fopen("data", "a+");
+
+	// These two lines are for removing the newline character at the end
+	strcpy(buffer, ctime(&t));
+	buffer[strlen(buffer)-1] = '\0';
+
+	fprintf(file, buffer);
+	fprintf(file, " : ");
 	fprintf(file, text);
-
 	fprintf(file, "\n");
 
 	fclose(file);
